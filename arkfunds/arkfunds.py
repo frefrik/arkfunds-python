@@ -36,14 +36,14 @@ class ArkFunds:
 
         return res
 
-    def _data(self, data, output):
-        if output == "df":
+    def _data(self, data, ret_df):
+        if ret_df:
             try:
                 df = pd.DataFrame(data)
             except ValueError:
                 df = pd.DataFrame(data, index=[0])
             return df
-        elif output == "json":
+        else:
             return data
 
 
@@ -62,7 +62,7 @@ class ETF(ArkFunds):
         except Exception:
             self.yf = None
 
-    def profile(self, output: str = "json"):
+    def profile(self, df: bool = False):
         params = {
             "symbol": self.symbol,
         }
@@ -70,9 +70,9 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="profile", params=params)
         _json = res.json()["profile"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
-    def holdings(self, date: date = None, output: str = "df"):
+    def holdings(self, date: date = None, df: bool = True):
         params = {
             "symbol": self.symbol,
             "date": date,
@@ -81,9 +81,9 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="holdings", params=params)
         _json = res.json()["holdings"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
-    def trades(self, period: str = None, output: str = "df"):
+    def trades(self, period: str = None, df: bool = True):
         params = {
             "symbol": self.symbol,
             "period": period,
@@ -92,9 +92,9 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="trades", params=params)
         _json = res.json()["trades"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
-    def news(self, date_from: date = None, date_to: date = None, output: str = "df"):
+    def news(self, date_from: date = None, date_to: date = None, df: bool = True):
         params = {
             "symbol": self.symbol,
             "date_from": date_from,
@@ -104,7 +104,7 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="news", params=params)
         _json = res.json()["news"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
     def price(self):
         if self.yf:
@@ -132,7 +132,7 @@ class Stock(ArkFunds):
         super().__init__()
         self.symbol = symbol
 
-    def profile(self, output: str = "json"):
+    def profile(self, df: bool = False):
         params = {
             "symbol": self.symbol,
         }
@@ -140,9 +140,9 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="profile", params=params)
         _json = res.json()
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
-    def fund_ownership(self, output: str = "df"):
+    def fund_ownership(self, df: bool = True):
         params = {
             "symbol": self.symbol,
         }
@@ -150,14 +150,14 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="fund-ownership", params=params)
         _json = res.json()["ownership"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
 
     def trades(
         self,
         direction: str = None,
         date_from: date = None,
         date_to: date = None,
-        output: str = "df",
+        df: bool = True,
     ):
         params = {
             "symbol": self.symbol,
@@ -169,4 +169,4 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="trades", params=params)
         _json = res.json()["trades"]
 
-        return self._data(_json, output)
+        return self._data(_json, df)
