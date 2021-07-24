@@ -34,12 +34,10 @@ class ArkFunds:
 
         return res
 
-    def _data(self, data, ret_df):
-        if ret_df:
-            try:
-                df = pd.DataFrame(data)
-            except ValueError:
-                df = pd.DataFrame(data, index=[0])
-            return df
-        else:
-            return data
+    def _dataframe(self, data):
+        try:
+            df = pd.DataFrame(data)
+        except ValueError:
+            df = pd.DataFrame(data, index=[0])
+        return df
+            

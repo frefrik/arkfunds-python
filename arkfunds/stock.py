@@ -14,11 +14,8 @@ class Stock(ArkFunds):
         super().__init__()
         self.symbol = symbol
 
-    def profile(self, df: bool = False):
+    def profile(self):
         """Get Stock profile information
-
-        Args:
-            df (bool, optional): Return pandas.DataFrame. Defaults to False.
 
         Returns:
             dict
@@ -28,15 +25,11 @@ class Stock(ArkFunds):
         }
 
         res = self._get(key="stock", endpoint="profile", params=params)
-        _json = res.json()
 
-        return self._data(_json, df)
+        return res.json()
 
-    def fund_ownership(self, df: bool = True):
+    def fund_ownership(self):
         """Get Stock Fund Ownership
-
-        Args:
-            df (bool, optional): Return pandas.DataFrame. Defaults to True.
 
         Returns:
             pandas.DataFrame
@@ -48,14 +41,10 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="fund-ownership", params=params)
         _json = res.json()["ownership"]
 
-        return self._data(_json, df)
+        return self._dataframe(_json)
 
     def trades(
-        self,
-        direction: str = None,
-        date_from: date = None,
-        date_to: date = None,
-        df: bool = True,
+        self, direction: str = None, date_from: date = None, date_to: date = None
     ):
         """Get Stock Trades
 
@@ -63,7 +52,6 @@ class Stock(ArkFunds):
             direction (str, optional): 'Buy' or 'Sell'. Defaults to None.
             date_from (date, optional): From-date in ISO 8601 format.. Defaults to None.
             date_to (date, optional): To-date in ISO 8601 format.. Defaults to None.
-            df (bool, optional): Return pandas.DataFrame. Defaults to True.
 
         Returns:
             pandas.DataFrame
@@ -78,4 +66,4 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="trades", params=params)
         _json = res.json()["trades"]
 
-        return self._data(_json, df)
+        return self._dataframe(_json)

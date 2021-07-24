@@ -20,11 +20,8 @@ class ETF(ArkFunds):
         except Exception:
             self.yf = None
 
-    def profile(self, df: bool = False):
+    def profile(self):
         """Get ARK ETF profile information
-
-        Args:
-            df (bool, optional): Return pandas.DataFrame. Defaults to False.
 
         Returns:
             dict
@@ -34,16 +31,14 @@ class ETF(ArkFunds):
         }
 
         res = self._get(key="etf", endpoint="profile", params=params)
-        _json = res.json()["profile"]
 
-        return self._data(_json, df)
+        return res.json()["profile"]
 
-    def holdings(self, date: date = None, df: bool = True):
+    def holdings(self, date: date = None):
         """Get ARK ETF holdings
 
         Args:
             date (date, optional): Fund holding date in ISO 8601 format. Defaults to None.
-            df (bool, optional): Return pandas.DataFrame. Defaults to True.
 
         Returns:
             pandas.DataFrame
@@ -56,14 +51,13 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="holdings", params=params)
         _json = res.json()["holdings"]
 
-        return self._data(_json, df)
+        return self._dataframe(_json)
 
-    def trades(self, period: str = "1d", df: bool = True):
+    def trades(self, period: str = "1d"):
         """Get ARK ETF intraday trades
 
         Args:
             period (str, optional): Valid periods: 1d, 7d, 1m, 3m, 1y, ytd. Defaults to "1d".
-            df (bool, optional): Return pandas.DataFrame. Defaults to True.
 
         Returns:
             pandas.DataFrame
@@ -76,15 +70,14 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="trades", params=params)
         _json = res.json()["trades"]
 
-        return self._data(_json, df)
+        return self._dataframe(_json)
 
-    def news(self, date_from: date = None, date_to: date = None, df: bool = True):
+    def news(self, date_from: date = None, date_to: date = None):
         """Get ARK ETF news
 
         Args:
             date_from (date, optional): From-date in ISO 8601 format. Defaults to None.
             date_to (date, optional): To-date in ISO 8601 format. Defaults to None.
-            df (bool, optional): Return pandas.DataFrame. Defaults to True.
 
         Returns:
             pandas.DataFrame
@@ -98,7 +91,7 @@ class ETF(ArkFunds):
         res = self._get(key="etf", endpoint="news", params=params)
         _json = res.json()["news"]
 
-        return self._data(_json, df)
+        return self._dataframe(_json)
 
     def price(self):
         """Get current ticker price
