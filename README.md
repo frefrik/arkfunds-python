@@ -2,6 +2,13 @@
 
 python-arkfunds is a Python library for monitoring Ark Invest funds data.
 
+## Installation
+Install the latest release from [PyPI](https://pypi.org/project/arkfunds/):
+
+```bash
+pip install arkfunds
+```
+
 ## Quickstart
 ```python
 from arkfunds import ETF, Stock
