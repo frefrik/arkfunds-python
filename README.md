@@ -126,19 +126,23 @@ arkk = ETF('ARKK')
 
 p = arkk.price()
 print(p)
-# Output: 122.43
+# Output:
+# 122.43
 
 c = arkk.change()
 print(c)
-# Output: 0.7200012
+# Output:
+# 0.7200012
 
 cp = arkk.changep()
 print(cp)
-# Output: 0.5915711
+# Output:
+# 0.5915711
 
 lt = arkk.last_trade()
 print(lt)
-# Output: datetime.datetime(2021, 7, 23, 20, 0)
+# Output:
+# datetime.datetime(2021, 7, 23, 20, 0)
 
 df = arkk.price_history(days_back=7, frequency="d")
 print(df)
