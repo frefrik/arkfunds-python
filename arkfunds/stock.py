@@ -38,10 +38,9 @@ class Stock(ArkFunds):
             "symbol": self.symbol,
         }
 
-        res = self._get(key="stock", endpoint="fund-ownership", params=params)
-        _json = res.json()["ownership"]
+        res = self._get(key="stock", endpoint="ownership", params=params).json()
 
-        return self._dataframe(_json)
+        return self._dataframe(res, key="stock", endpoint="ownership")
 
     def trades(
         self, direction: str = None, date_from: date = None, date_to: date = None
@@ -63,7 +62,6 @@ class Stock(ArkFunds):
             "date_to": date_to,
         }
 
-        res = self._get(key="stock", endpoint="trades", params=params)
-        _json = res.json()["trades"]
+        res = self._get(key="stock", endpoint="trades", params=params).json()
 
-        return self._dataframe(_json)
+        return self._dataframe(res, key="stock", endpoint="trades")

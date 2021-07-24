@@ -48,10 +48,9 @@ class ETF(ArkFunds):
             "date": date,
         }
 
-        res = self._get(key="etf", endpoint="holdings", params=params)
-        _json = res.json()["holdings"]
+        res = self._get(key="etf", endpoint="holdings", params=params).json()
 
-        return self._dataframe(_json)
+        return self._dataframe(res, key="etf", endpoint="holdings")
 
     def trades(self, period: str = "1d"):
         """Get ARK ETF intraday trades
@@ -67,10 +66,9 @@ class ETF(ArkFunds):
             "period": period,
         }
 
-        res = self._get(key="etf", endpoint="trades", params=params)
-        _json = res.json()["trades"]
+        res = self._get(key="etf", endpoint="trades", params=params).json()
 
-        return self._dataframe(_json)
+        return self._dataframe(res, key="etf", endpoint="trades")
 
     def news(self, date_from: date = None, date_to: date = None):
         """Get ARK ETF news
@@ -88,10 +86,9 @@ class ETF(ArkFunds):
             "date_to": date_to,
         }
 
-        res = self._get(key="etf", endpoint="news", params=params)
-        _json = res.json()["news"]
+        res = self._get(key="etf", endpoint="news", params=params).json()
 
-        return self._dataframe(_json)
+        return self._dataframe(res, key="etf", endpoint="news")
 
     def price(self):
         """Get current ticker price

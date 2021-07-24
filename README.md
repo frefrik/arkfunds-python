@@ -67,12 +67,12 @@ df = arkk.holdings()
 print(df.head(5))
 
 # Output:
-#                  company ticker      cusip   shares  market_value  weight  weight_rank
-# 0              TESLA INC   TSLA  88160R101  3595826  2.375043e+09   10.45            1
-# 1               ROKU INC   ROKU  77543R102  3240563  1.351963e+09    5.95            2
-# 2     TELADOC HEALTH INC   TDOC  87918A105  8580517  1.328521e+09    5.85            3
-# 3         SQUARE INC - A     SQ  852234103  4622420  1.139288e+09    5.01            4
-# 4  SHOPIFY INC - CLASS A   SHOP  82509L107   724602  1.104859e+09    4.86            5
+#           date  fund                       company ticker      cusip     shares  market_value  weight  weight_rank
+# 0   2021-07-23  ARKK                     TESLA INC   TSLA  88160R101    3598676  2.336476e+09   10.08            1
+# 1   2021-07-23  ARKK                      ROKU INC   ROKU  77543R102    3243131  1.364223e+09    5.88            2
+# 2   2021-07-23  ARKK            TELADOC HEALTH INC   TDOC  87918A105    8587318  1.312743e+09    5.66            3
+# 3   2021-07-23  ARKK                SQUARE INC - A     SQ  852234103    4626083  1.205511e+09    5.20            4
+# 4   2021-07-23  ARKK         SHOPIFY INC - CLASS A   SHOP  82509L107     717382  1.143571e+09    4.93            5
 ```
 
 ### ETF Trades
@@ -84,20 +84,20 @@ df = arkk.trades()
 print(df)
 
 # Output:
-#           date direction ticker                                company      cusip   shares  etf_percent
-# 0   2021-07-23       Buy      U                     UNITY SOFTWARE INC  91332U101    23749       0.0106
-# 1   2021-07-23       Buy   FATE                  FATE THERAPEUTICS INC  31189P102    74121       0.0270
-# 2   2021-07-23       Buy   TWTR                            TWITTER INC  90184L102   982205       0.2983
-# 3   2021-07-23       Buy   PACB  PACIFIC BIOSCIENCES OF CALIFORNIA INC  69404D108   265173       0.0345
-# 4   2021-07-23       Buy   PATH                             UIPATH INC  90364P105    80566       0.0217
-# 5   2021-07-23      Sell    TXG                       10X GENOMICS INC  88025U109    19665       0.0155
-# 6   2021-07-23      Sell   TWST                  TWIST BIOSCIENCE CORP  90184D100     5672       0.0029
-# 7   2021-07-23      Sell  TCEHY                   TENCENT HOLDINGS LTD  88032Q109      134       0.0000
-# 8   2021-07-23      Sell   ROKU                               ROKU INC  77543R102    59042       0.1180
-# 9   2021-07-23      Sell   PSTG                       PURE STORAGE INC  74624M102      350       0.0000
-# 10  2021-07-23      Sell    NVS                            NOVARTIS AG  66987V109      216       0.0001
-# 11  2021-07-23      Sell   DOCU                           DOCUSIGN INC  256163106    39242       0.0519
-# 12  2021-07-23      Sell   BEKE                        KE HOLDINGS INC  482497104  2033197       0.2549
+#           date  fund direction ticker                                company      cusip   shares  etf_percent
+# 0   2021-07-23  ARKK       Buy      U                     UNITY SOFTWARE INC  91332U101    23749       0.0106
+# 1   2021-07-23  ARKK       Buy   FATE                  FATE THERAPEUTICS INC  31189P102    74121       0.0270
+# 2   2021-07-23  ARKK       Buy   TWTR                            TWITTER INC  90184L102   982205       0.2983
+# 3   2021-07-23  ARKK       Buy   PACB  PACIFIC BIOSCIENCES OF CALIFORNIA INC  69404D108   265173       0.0345
+# 4   2021-07-23  ARKK       Buy   PATH                             UIPATH INC  90364P105    80566       0.0217
+# 5   2021-07-23  ARKK      Sell    TXG                       10X GENOMICS INC  88025U109    19665       0.0155
+# 6   2021-07-23  ARKK      Sell   TWST                  TWIST BIOSCIENCE CORP  90184D100     5672       0.0029
+# 7   2021-07-23  ARKK      Sell  TCEHY                   TENCENT HOLDINGS LTD  88032Q109      134       0.0000
+# 8   2021-07-23  ARKK      Sell   ROKU                               ROKU INC  77543R102    59042       0.1180
+# 9   2021-07-23  ARKK      Sell   PSTG                       PURE STORAGE INC  74624M102      350       0.0000
+# 10  2021-07-23  ARKK      Sell    NVS                            NOVARTIS AG  66987V109      216       0.0001
+# 11  2021-07-23  ARKK      Sell   DOCU                           DOCUSIGN INC  256163106    39242       0.0519
+# 12  2021-07-23  ARKK      Sell   BEKE                        KE HOLDINGS INC  482497104  2033197       0.2549
 ```
 
 ### ETF News
@@ -194,10 +194,10 @@ df = tsla.fund_ownership()
 print(df)
 
 # Output:
-#    fund  weight  weight_rank   shares  market_value
-# 0  ARKK   10.08            1  3598676  2.336476e+09
-# 1  ARKQ   11.02            1   482989  3.135854e+08
-# 2  ARKW   10.10            1   913753  5.932633e+08
+#          date ticker  fund  weight  weight_rank   shares  market_value
+# 0  2021-07-23   TSLA  ARKK   10.08            1  3598676  2.336476e+09
+# 1  2021-07-23   TSLA  ARKQ   11.02            1   482989  3.135854e+08
+# 2  2021-07-23   TSLA  ARKW   10.10            1   913753  5.932633e+08
 ```
 
 ### Stock Trades

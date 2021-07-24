@@ -14,7 +14,7 @@ class ArkFunds:
         },
         "stock": {
             "profile": "/stock/profile",
-            "fund-ownership": "/stock/fund-ownership",
+            "ownership": "/stock/fund-ownership",
             "trades": "/stock/trades",
         },
     }
@@ -34,10 +34,25 @@ class ArkFunds:
 
         return res
 
-    def _dataframe(self, data):
-        try:
-            df = pd.DataFrame(data)
-        except ValueError:
-            df = pd.DataFrame(data, index=[0])
+    def _dataframe(self, _json, key=None, endpoint=None):
+        data = _json[endpoint]
+        df = pd.DataFrame(data)
+
+        if key == "etf":
+            if endpoint == "holdings":
+                symbol = _json.get("symbol")
+                _date = _json.get("date")
+                df.insert(0, "date", _date)
+                df.insert(1, "fund", symbol)
+
+            if endpoint == "trades":
+                symbol = _json.get("symbol")
+                df.insert(1, "fund", symbol)
+
+        if key == "stock" and endpoint == "ownership":
+            symbol = _json.get("symbol")
+            _date = _json.get("date")
+            df.insert(0, "date", _date)
+            df.insert(1, "ticker", symbol)
+
         return df
-            
