@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "arkfunds"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python library for monitoring Ark Invest funds data."
-repository = "https://github.com/frefrik/python-arkfunds"
+repository = "https://github.com/frefrik/arkfunds-python"
 readme = "README.md"
 keywords = ["ark invest", "ark funds", "etf", "funds", "finance"]
 authors = ["Fredrik Haarstad <codemonkey@zomg.no>"]
