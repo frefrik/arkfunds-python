@@ -1,5 +1,6 @@
 from datetime import date
 from .arkfunds import ArkFunds
+from .yahoo import YahooFinance
 
 
 class Stock(ArkFunds):
@@ -13,6 +14,11 @@ class Stock(ArkFunds):
         """
         super().__init__()
         self.symbol = symbol
+
+        try:
+            self.yf = YahooFinance(self.symbol)
+        except Exception:
+            self.yf = None
 
     def profile(self):
         """Get Stock profile information
@@ -65,3 +71,52 @@ class Stock(ArkFunds):
         res = self._get(key="stock", endpoint="trades", params=params).json()
 
         return self._dataframe(res, key="stock", endpoint="trades")
+
+    def price(self):
+        """Get current ticker price
+
+        Returns:
+            float
+        """
+        if self.yf:
+            return self.yf.price
+
+    def change(self):
+        """Get current price change
+
+        Returns:
+            float
+        """
+        if self.yf:
+            return self.yf.change
+
+    def changep(self):
+        """Get current price change in percent
+
+        Returns:
+            float
+        """
+        if self.yf:
+            return self.yf.changep
+
+    def last_trade(self):
+        """Get last trade date
+
+        Returns:
+            datetime.datetime
+        """
+        if self.yf:
+            return self.yf.last_trade
+
+    def price_history(self, days_back=7, frequency="d"):
+        """Get historical price data for ticker
+
+        Args:
+            days_back (int, optional): Number of days with history. Defaults to 7.
+            frequency (str, optional): Valid params: 'd' (daily), 'w' (weekly), 'm' (monthly). Defaults to "d".
+
+        Returns:
+            pandas.DataFrame
+        """
+        if self.yf:
+            return self.yf.price_history(days_back=days_back, frequency=frequency)

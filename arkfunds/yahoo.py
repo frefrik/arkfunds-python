@@ -32,16 +32,16 @@ class YahooFinance:
 
         _json = res.json()["optionChain"]["result"][0]["quote"]
 
-        self.ticker = _json["symbol"]
-        self._price = _json["regularMarketPrice"]
-        self.currency = _json["currency"]
-        self.exchange = _json["exchange"]
-        self._change = _json.get("regularMarketChange")
-        self._changep = _json["regularMarketChangePercent"]
-        self._last_trade = datetime.utcfromtimestamp(_json["regularMarketTime"])
-        self._name = _json.get("longName", "")
+        self.yf_ticker = _json.get("symbol")
+        self.yf_price = _json.get("regularMarketPrice")
+        self.yf_currency = _json.get("currency")
+        self.yf_exchange = _json.get("exchange")
+        self.yf_change = _json.get("regularMarketChange")
+        self.yf_changep = _json.get("regularMarketChangePercent")
+        self.yf_last_trade = datetime.utcfromtimestamp(_json.get("regularMarketTime"))
+        self.yf_name = _json.get("longName", "")
 
-    def get_history(self, days_back, frequency):
+    def price_history(self, days_back, frequency):
         dt = timedelta(days=days_back)
         frequency = {"m": "mo", "w": "wk", "d": "d"}[frequency]
 
@@ -65,19 +65,19 @@ class YahooFinance:
     @property
     def price(self):
         self._update_quote()
-        return self._price
+        return self.yf_price
 
     @property
     def last_trade(self):
         self._update_quote()
-        return self._last_trade
+        return self.yf_last_trade
 
     @property
     def change(self):
         self._update_quote()
-        return self._change
+        return self.yf_change
 
     @property
     def changep(self):
         self._update_quote()
-        return self._changep
+        return self.yf_changep

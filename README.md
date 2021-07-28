@@ -21,18 +21,18 @@ arkk.holdings()
 arkk.trades()
 arkk.news()
 
-arkk.price()
-arkk.price_history()
-arkk.change()
-arkk.changep()
-arkk.last_trade()
-
 # Stocks
 tsla = Stock("TSLA")
 
 tsla.profile()
 tsla.fund_ownership()
 tsla.trades()
+
+tsla.price()
+tsla.price_history()
+tsla.change()
+tsla.changep()
+tsla.last_trade()
 ```
 
 ## Usage: ARK ETFs
@@ -126,43 +126,6 @@ print(df.head(5))
 # [5 rows x 8 columns]                                                 
 ```
 
-### ETF Prices
-```python
-from arkfunds import ETF
-arkk = ETF('ARKK')
-
-p = arkk.price()
-print(p)
-# Output:
-# 122.43
-
-c = arkk.change()
-print(c)
-# Output:
-# 0.7200012
-
-cp = arkk.changep()
-print(cp)
-# Output:
-# 0.5915711
-
-lt = arkk.last_trade()
-print(lt)
-# Output:
-# datetime.datetime(2021, 7, 23, 20, 0)
-
-df = arkk.price_history(days_back=7, frequency="d")
-print(df)
-
-# Output: 
-#         Date        Open        High         Low       Close   Adj Close    Volume
-# 0 2021-07-19  113.919998  117.580002  113.269997  117.279999  117.279999  11861800
-# 1 2021-07-20  117.510002  121.175003  116.449997  120.760002  120.760002   6707700
-# 2 2021-07-21  120.875000  122.910004  119.980003  122.660004  122.660004   5738200
-# 3 2021-07-22  122.500000  123.419998  121.250000  121.709999  121.709999   4781500
-# 4 2021-07-23  122.000000  122.559998  120.379997  122.430000  122.430000   4383900
-```
-
 ## Usage: Stocks
 ```python
 from arkfunds import Stock
@@ -234,6 +197,44 @@ print(df)
 # 70  2020-09-18  ARKK      Sell   TSLA  TESLA INC  88160R101   85200       0.4400
 # 
 # [71 rows x 8 columns]
+```
+
+### Stock Prices
+```python
+from arkfunds import Stock
+tsla = Stock('TSLA')
+
+p = tsla.price()
+print(p)
+# Output:
+# 646.98
+
+c = tsla.change()
+print(c)
+# Output:
+# 2.1999512
+
+cp = tsla.changep()
+print(cp)
+# Output:
+# 0.34119406
+
+lt = tsla.last_trade()
+print(lt)
+# Output:
+# datetime.datetime(2021, 7, 28, 20, 0, 3)
+
+df = tsla.price_history(days_back=7, frequency="d")
+print(df)
+
+# Output: 
+#         Date        Open        High         Low       Close   Adj Close    Volume
+# 0 2021-07-21  659.609985  664.859985  650.289978  655.289978  655.289978  13910800
+# 1 2021-07-22  656.440002  662.169983  644.599976  649.260010  649.260010  15105700
+# 2 2021-07-23  646.359985  648.799988  637.299988  643.380005  643.380005  14581300
+# 3 2021-07-26  650.969971  668.200012  647.109985  657.619995  657.619995  25044100
+# 4 2021-07-27  663.400024  666.500000  627.239990  644.780029  644.780029  32756900
+# 5 2021-07-28  646.994995  654.969910  639.400085  646.979980  646.979980  15790823
 ```
 
 ## License
