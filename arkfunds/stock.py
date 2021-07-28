@@ -75,40 +75,13 @@ class Stock(ArkFunds):
         return self._dataframe(self.symbol, params)
 
     def price(self):
-        """Get current ticker price
+        """Get current stock price info
 
         Returns:
-            float
+            pandas.DataFrame
         """
         if self.yf:
             return self.yf.price
-
-    def change(self):
-        """Get current price change
-
-        Returns:
-            float
-        """
-        if self.yf:
-            return self.yf.change
-
-    def changep(self):
-        """Get current price change in percent
-
-        Returns:
-            float
-        """
-        if self.yf:
-            return self.yf.changep
-
-    def last_trade(self):
-        """Get last trade date
-
-        Returns:
-            datetime.datetime
-        """
-        if self.yf:
-            return self.yf.last_trade
 
     def price_history(self, days_back=7, frequency="d"):
         """Get historical price data for ticker

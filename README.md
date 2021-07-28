@@ -188,25 +188,11 @@ print(df)
 from arkfunds import Stock
 tsla = Stock('TSLA')
 
-p = tsla.price()
-print(p)
+df = tsla.price()
+print(df)
 # Output:
-# 646.98
-
-c = tsla.change()
-print(c)
-# Output:
-# 2.1999512
-
-cp = tsla.changep()
-print(cp)
-# Output:
-# 0.34119406
-
-lt = tsla.last_trade()
-print(lt)
-# Output:
-# datetime.datetime(2021, 7, 28, 20, 0, 3)
+#   ticker currency   price    change   changep          last_trade exchange
+# 0   TSLA      USD  646.98  2.199951  0.341194 2021-07-28 20:00:03      NMS
 
 df = tsla.price_history(days_back=7, frequency="d")
 print(df)

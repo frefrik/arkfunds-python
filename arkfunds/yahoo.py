@@ -11,7 +11,7 @@ class YahooFinance:
     history_url = "https://query1.finance.yahoo.com/v7/finance/download/{0}"
 
     def __init__(self, symbol):
-        self.symbol = symbol
+        self.symbol = symbol[0]
         self.timeout = 2
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": get_useragent(__class__.__name__)})
@@ -60,24 +60,20 @@ class YahooFinance:
 
         res = self._get(url, params=param_string)
         res.raise_for_status()
+
         return pd.read_csv(StringIO(res.text), parse_dates=["Date"])
 
     @property
     def price(self):
         self._update_quote()
-        return self.yf_price
+        data = {
+            "ticker": self.yf_ticker,
+            "currency": self.yf_currency,
+            "price": self.yf_price,
+            "change": self.yf_change,
+            "changep": self.yf_changep,
+            "last_trade": self.yf_last_trade,
+            "exchange": self.yf_exchange,
+        }
 
-    @property
-    def last_trade(self):
-        self._update_quote()
-        return self.yf_last_trade
-
-    @property
-    def change(self):
-        self._update_quote()
-        return self.yf_change
-
-    @property
-    def changep(self):
-        self._update_quote()
-        return self.yf_changep
+        return pd.DataFrame(data, index=[0])
