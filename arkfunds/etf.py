@@ -1,19 +1,19 @@
 from datetime import date
 from .arkfunds import ArkFunds
-from .yahoo import YahooFinance
+from .utils import _convert_to_list
 
 
 class ETF(ArkFunds):
     """Class for accessing ARK ETF data"""
 
-    def __init__(self, symbol: str):
+    def __init__(self, symbols: str):
         """Initialize
 
         Args:
-            symbol (str): ARK ETF symbol
+            symbols (str or list): ARK ETF symbol or list collection of symbols
         """
         super().__init__()
-        self.symbol = symbol
+        self.symbols = _convert_to_list(symbols)
 
         try:
             self.yf = YahooFinance(self.symbol)
@@ -27,7 +27,7 @@ class ETF(ArkFunds):
             dict
         """
         params = {
-            "symbol": self.symbol,
+            "symbol": self.symbols,
         }
 
         res = self._get(key="etf", endpoint="profile", params=params)
@@ -62,7 +62,7 @@ class ETF(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbol,
+            "symbol": self.symbols,
             "period": period,
         }
 
@@ -81,7 +81,7 @@ class ETF(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbol,
+            "symbol": self.symbols,
             "date_from": date_from,
             "date_to": date_to,
         }
