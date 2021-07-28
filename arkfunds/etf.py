@@ -31,7 +31,7 @@ class ETF(ArkFunds):
 
         if self.invalid_symbols:
             raise ValueError(
-                f"Invalid symbols: {self.invalid_symbols}. Only ARK ETF symbols accepted: {', '.join(self.FUNDS)}"
+                f"Invalid symbols: {self.invalid_symbols}. Only ARK ETF symbols accepted: {', '.join(self.ARK_FUNDS)}"
             )
 
     def profile(self):
