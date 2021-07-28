@@ -14,11 +14,25 @@ class ETF(ArkFunds):
         """
         super().__init__()
         self.symbols = _convert_to_list(symbols)
+        self._validate_symbols()
 
-        try:
-            self.yf = YahooFinance(self.symbol)
-        except Exception:
-            self.yf = None
+    def _validate_symbols(self):
+        valid_symbols = []
+        invalid_symbols = []
+
+        for symbol in self.symbols:
+            if symbol in self.ARK_FUNDS:
+                valid_symbols.append(symbol)
+            else:
+                invalid_symbols.append(symbol)
+
+        self.symbols = valid_symbols
+        self.invalid_symbols = invalid_symbols or None
+
+        if self.invalid_symbols:
+            raise ValueError(
+                f"Invalid symbols: {self.invalid_symbols}. Only ARK ETF symbols accepted: {', '.join(self.FUNDS)}"
+            )
 
     def profile(self):
         """Get ARK ETF profile information

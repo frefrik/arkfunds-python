@@ -4,6 +4,7 @@ from .utils import get_useragent
 
 
 class ArkFunds:
+    ARK_FUNDS = ["ARKK", "ARKQ", "ARKW", "ARKG", "ARKF", "ARKX", "PRNT", "IZRL"]
     BASE_URL = "https://arkfunds.io/api/v1"
     ENDPOINTS = {
         "etf": {
