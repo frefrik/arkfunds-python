@@ -1,6 +1,7 @@
 from datetime import date
 from .arkfunds import ArkFunds
 from .yahoo import YahooFinance
+from .utils import _convert_to_list
 
 
 class Stock(ArkFunds):
@@ -13,7 +14,7 @@ class Stock(ArkFunds):
             symbol (str): Stock ticker
         """
         super().__init__()
-        self.symbol = symbol
+        self.symbol = _convert_to_list(symbol)
 
         try:
             self.yf = YahooFinance(self.symbol)
@@ -27,12 +28,12 @@ class Stock(ArkFunds):
             dict
         """
         params = {
-            "symbol": self.symbol,
+            "key": "stock",
+            "endpoint": "profile",
+            "query": {},
         }
 
-        res = self._get(key="stock", endpoint="profile", params=params)
-
-        return res.json()
+        return self._dataframe(self.symbol, params)
 
     def fund_ownership(self):
         """Get Stock Fund Ownership
@@ -41,12 +42,12 @@ class Stock(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbol,
+            "key": "stock",
+            "endpoint": "ownership",
+            "query": {},
         }
 
-        res = self._get(key="stock", endpoint="ownership", params=params).json()
-
-        return self._dataframe(res, key="stock", endpoint="ownership")
+        return self._dataframe(self.symbol, params)
 
     def trades(
         self, direction: str = None, date_from: date = None, date_to: date = None
@@ -62,15 +63,16 @@ class Stock(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbol,
-            "direction": [direction.lower() if direction else None],
-            "date_from": date_from,
-            "date_to": date_to,
+            "key": "stock",
+            "endpoint": "trades",
+            "query": {
+                "direction": [direction.lower() if direction else None],
+                "date_from": date_from,
+                "date_to": date_to,
+            },
         }
 
-        res = self._get(key="stock", endpoint="trades", params=params).json()
-
-        return self._dataframe(res, key="stock", endpoint="trades")
+        return self._dataframe(self.symbol, params)
 
     def price(self):
         """Get current ticker price

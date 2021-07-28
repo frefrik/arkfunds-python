@@ -38,31 +38,23 @@ tsla.last_trade()
 ## Usage: ARK ETFs
 ```python
 from arkfunds import ETF
-arkk = ETF('<ark fund symbol>')
+arkk = ETF('<ark fund symbols>')
 ```
 
 ### ETF Profile
 ```python
 import json
 from arkfunds import ETF
-arkk = ETF('ARKK')
+etfs = ETF("ARKF, ARKK, ARKX")
 
-profile = arkk.profile()
-print(json.dumps(profile, indent=2))
+df = etfs.profile()
+print(df)
 
 # Output:
-# [
-#   {
-#     "symbol": "ARKK",
-#     "name": "ARK Innovation ETF",
-#     "description": "ARKK is an actively managed ETF that seeks long-term growth of capital by investing under normal circumstances primarily (at least 65% of its assets) in domestic and foreign equity securities of companies that are relevant to the Fund's investment theme of disruptive innovation.",
-#     "fund_type": "Active Equity ETF",
-#     "inception_date": "2014-10-31",
-#     "cusip": "00214Q104",
-#     "isin": "US00214Q1040",
-#     "website": "https://ark-funds.com/arkk"
-#   }
-# ]
+#   symbol                                name                                        description          fund_type inception_date      cusip          isin                            website
+# 0   ARKF              Fintech Innovation ETF  ARKF is an actively managed Exchange Traded Fu...  Active Equity ETF     2019-02-04  00214Q708  US00214Q7088  https://ark-funds.com/fintech-etf
+# 1   ARKK                  ARK Innovation ETF  ARKK is an actively managed ETF that seeks lon...  Active Equity ETF     2014-10-31  00214Q104  US00214Q1040         https://ark-funds.com/arkk
+# 2   ARKX  Space Exploration & Innovation ETF  ARKX is an actively-managed exchange-traded fu...  Active Equity ETF     2021-03-30  00214Q807  US00214Q8078         https://ark-funds.com/arkx
 ```
 
 ### ETF Holdings

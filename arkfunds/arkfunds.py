@@ -4,7 +4,7 @@ from .utils import get_useragent
 
 
 class ArkFunds:
-    ARK_FUNDS = ["ARKK", "ARKQ", "ARKW", "ARKG", "ARKF", "ARKX", "PRNT", "IZRL"]
+    ARK_FUNDS = ["ARKF", "ARKG", "ARKK", "ARKQ", "ARKW", "ARKX", "IZRL", "PRNT"]
     BASE_URL = "https://arkfunds.io/api/v1"
     ENDPOINTS = {
         "etf": {
@@ -25,35 +25,47 @@ class ArkFunds:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": get_useragent(__class__.__name__)})
 
-    def _get(self, key, endpoint, params):
+    def _get(self, params):
         res = self.session.get(
-            self.BASE_URL + self.ENDPOINTS[key][endpoint],
-            params=params,
+            self.BASE_URL + self.ENDPOINTS[params["key"]][params["endpoint"]],
+            params=params["query"],
             timeout=self.timeout,
         )
         res.raise_for_status()
 
         return res
 
-    def _dataframe(self, _json, key=None, endpoint=None):
-        data = _json[endpoint]
-        df = pd.DataFrame(data)
+    def _dataframe(self, symbols, params):
+        key = params["key"]
+        endpoint = params["endpoint"]
+        dataframes = []
 
-        if key == "etf":
-            if endpoint == "holdings":
-                symbol = _json.get("symbol")
-                _date = _json.get("date")
+        for symbol in symbols:
+            params["query"]["symbol"] = symbol
+            data = self._get(params).json()
+
+            if key == "stock" and endpoint == "profile":
+                df = pd.DataFrame(data, index=[0])
+            else:
+                df = pd.DataFrame(data[endpoint])
+
+            if key == "etf":
+                if endpoint == "holdings":
+                    _date = data.get("date")
+                    df.insert(0, "date", _date)
+                    df.insert(1, "fund", symbol)
+
+                if endpoint == "trades":
+                    df.insert(1, "fund", symbol)
+
+            if key == "stock" and endpoint == "ownership":
+                ticker = data.get("symbol")
+                _date = data.get("date")
                 df.insert(0, "date", _date)
-                df.insert(1, "fund", symbol)
+                df.insert(1, "ticker", ticker)
 
-            if endpoint == "trades":
-                symbol = _json.get("symbol")
-                df.insert(1, "fund", symbol)
+            dataframes.append(df)
 
-        if key == "stock" and endpoint == "ownership":
-            symbol = _json.get("symbol")
-            _date = _json.get("date")
-            df.insert(0, "date", _date)
-            df.insert(1, "ticker", symbol)
+        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
 
         return df

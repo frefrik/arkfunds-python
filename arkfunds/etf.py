@@ -38,17 +38,17 @@ class ETF(ArkFunds):
         """Get ARK ETF profile information
 
         Returns:
-            dict
+            pandas.DataFrame
         """
         params = {
-            "symbol": self.symbols,
+            "key": "etf",
+            "endpoint": "profile",
+            "query": {},
         }
 
-        res = self._get(key="etf", endpoint="profile", params=params)
+        return self._dataframe(self.symbols, params)
 
-        return res.json()["profile"]
-
-    def holdings(self, date: date = None):
+    def holdings(self, _date: date = None):
         """Get ARK ETF holdings
 
         Args:
@@ -58,13 +58,14 @@ class ETF(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbol,
-            "date": date,
+            "key": "etf",
+            "endpoint": "holdings",
+            "query": {
+                "date": _date,
+            },
         }
 
-        res = self._get(key="etf", endpoint="holdings", params=params).json()
-
-        return self._dataframe(res, key="etf", endpoint="holdings")
+        return self._dataframe(self.symbols, params)
 
     def trades(self, period: str = "1d"):
         """Get ARK ETF intraday trades
@@ -76,13 +77,14 @@ class ETF(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbols,
-            "period": period,
+            "key": "etf",
+            "endpoint": "trades",
+            "query": {
+                "period": period,
+            },
         }
 
-        res = self._get(key="etf", endpoint="trades", params=params).json()
-
-        return self._dataframe(res, key="etf", endpoint="trades")
+        return self._dataframe(self.symbols, params)
 
     def news(self, date_from: date = None, date_to: date = None):
         """Get ARK ETF news
@@ -95,11 +97,12 @@ class ETF(ArkFunds):
             pandas.DataFrame
         """
         params = {
-            "symbol": self.symbols,
-            "date_from": date_from,
-            "date_to": date_to,
+            "key": "etf",
+            "endpoint": "news",
+            "query": {
+                "date_from": date_from,
+                "date_to": date_to,
+            },
         }
 
-        res = self._get(key="etf", endpoint="news", params=params).json()
-
-        return self._dataframe(res, key="etf", endpoint="news")
+        return self._dataframe(self.symbols, params)
