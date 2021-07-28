@@ -130,25 +130,17 @@ import json
 from arkfunds import Stock
 tsla = Stock('TSLA')
 
-profile = tsla.profile()
-print(json.dumps(profile, indent=2))
+df = tsla.profile()
+print(df)
+print(df.columns.to_list())
 
 # Output:
-# {
-#   "ticker": "TSLA",
-#   "name": "Tesla, Inc.",
-#   "country": "United States",
-#   "industry": "Auto Manufacturers",
-#   "sector": "Consumer Cyclical",
-#   "fullTimeEmployees": 70757,
-#   "summary": "Tesla, Inc. designs, develops, manufactures, leases, and sells electric vehicles, and energy generation and storage systems in the United States, China, and internationally. The company operates in two segments, Automotive, and Energy Generation and Storage. The Automotive segment offers electric vehicles, as well as sells automotive regulatory credits. It provides sedans and sport utility vehicles through direct and used vehicle sales, a network of Tesla Superchargers, and in-app upgrades; and purchase financing and leasing services. This segment is also involved in the provision of non-warranty after-sales vehicle services, sale of used vehicles, retail merchandise, and vehicle insurance, as well as sale of products through its subsidiaries to third party customers; services for electric vehicles through its company-owned service locations, and Tesla mobile service technicians; and vehicle limited warranties and extended service plans. The Energy Generation and Storage segment engages in the design, manufacture, installation, sale, and leasing of solar energy generation and energy storage products, and related services to residential, commercial, and industrial customers and utilities through its website, stores, and galleries, as well as through a network of channel partners. This segment also offers service and repairs to its energy product customers, including under warranty; and various financing options to its solar customers. The company was formerly known as Tesla Motors, Inc. and changed its name to Tesla, Inc. in February 2017. Tesla, Inc. was founded in 2003 and is headquartered in Palo Alto, California.",
-#   "website": "http://www.tesla.com",
-#   "market": "us_market",
-#   "exchange": "NasdaqGS",
-#   "currency": "USD",
-#   "marketCap": 619787255808.0,
-#   "sharesOutstanding": 963329984
-# }
+#   ticker         name        country            industry             sector  fullTimeEmployees  ...               website     market  exchange currency     marketCap  sharesOutstanding
+# 0   TSLA  Tesla, Inc.  United States  Auto Manufacturers  Consumer Cyclical              70757  ...  http://www.tesla.com  us_market  NasdaqGS      USD  6.232552e+11          963329984
+# 
+# [1 rows x 13 columns]
+#
+# ['ticker', 'name', 'country', 'industry', 'sector', 'fullTimeEmployees', 'summary', 'website', 'market', 'exchange', 'currency', 'marketCap', 'sharesOutstanding']
 ```
 
 ### Stock Fund Ownership
