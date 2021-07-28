@@ -30,9 +30,6 @@ tsla.trades()
 
 tsla.price()
 tsla.price_history()
-tsla.change()
-tsla.changep()
-tsla.last_trade()
 ```
 
 ## Usage: ARK ETFs
