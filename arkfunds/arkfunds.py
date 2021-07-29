@@ -20,7 +20,8 @@ class ArkFunds:
         },
     }
 
-    def __init__(self):
+    def __init__(self, symbols):
+        self.symbols = symbols
         self.timeout = 2
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": get_useragent(__class__.__name__)})
@@ -52,17 +53,17 @@ class ArkFunds:
             if key == "etf":
                 if endpoint == "holdings":
                     _date = data.get("date")
-                    df.insert(0, "date", _date)
-                    df.insert(1, "fund", symbol)
+                    df.insert(0, "fund", symbol)
+                    df.insert(1, "date", _date)
 
                 if endpoint == "trades":
-                    df.insert(1, "fund", symbol)
+                    df.insert(0, "fund", symbol)
 
             if key == "stock" and endpoint == "ownership":
                 ticker = data.get("symbol")
                 _date = data.get("date")
-                df.insert(0, "date", _date)
-                df.insert(1, "ticker", ticker)
+                df.insert(0, "ticker", ticker)
+                df.insert(1, "date", _date)
 
             dataframes.append(df)
 

@@ -10,8 +10,8 @@ class YahooFinance:
     quote_url = "https://query2.finance.yahoo.com/v7/finance/options/{0}"
     history_url = "https://query1.finance.yahoo.com/v7/finance/download/{0}"
 
-    def __init__(self, symbol):
-        self.symbol = symbol[0]
+    def __init__(self, symbols):
+        self.symbols = symbols
         self.timeout = 2
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": get_useragent(__class__.__name__)})
@@ -23,25 +23,33 @@ class YahooFinance:
         return res
 
     def _update_quote(self):
-        res = self._get(self.quote_url.format(self.symbol))
+        self._quote = []
+        for symbol in self.symbols:
+            res = self._get(self.quote_url.format(symbol))
 
-        if res.status_code == 404:
-            raise LookupError("Symbol not found.")
-        else:
-            res.raise_for_status()
+            if res.status_code == 404:
+                raise LookupError("Symbol not found.")
+            else:
+                res.raise_for_status()
 
-        _json = res.json()["optionChain"]["result"][0]["quote"]
+            _json = res.json()["optionChain"]["result"][0]["quote"]
 
-        self.yf_ticker = _json.get("symbol")
-        self.yf_price = _json.get("regularMarketPrice")
-        self.yf_currency = _json.get("currency")
-        self.yf_exchange = _json.get("exchange")
-        self.yf_change = _json.get("regularMarketChange")
-        self.yf_changep = _json.get("regularMarketChangePercent")
-        self.yf_last_trade = datetime.utcfromtimestamp(_json.get("regularMarketTime"))
-        self.yf_name = _json.get("longName", "")
+            self._quote.append(
+                {
+                    "ticker": _json.get("symbol"),
+                    "currency": _json.get("currency"),
+                    "price": _json.get("regularMarketPrice"),
+                    "change": _json.get("regularMarketChange"),
+                    "changep": _json.get("regularMarketChangePercent"),
+                    "last_trade": datetime.utcfromtimestamp(
+                        _json.get("regularMarketTime")
+                    ),
+                    "exchange": _json.get("exchange"),
+                }
+            )
 
     def price_history(self, days_back, frequency):
+        dataframes = []
         dt = timedelta(days=days_back)
         frequency = {"m": "mo", "w": "wk", "d": "d"}[frequency]
 
@@ -49,31 +57,28 @@ class YahooFinance:
         dateto = int(now.timestamp())
         datefrom = int((now - dt).timestamp())
 
-        url = self.history_url.format(self.symbol)
-        params = {
-            "period1": datefrom,
-            "period2": dateto,
-            "interval": f"1{frequency}",
-            "events": "history",
-        }
-        param_string = urlencode(params).replace("%5Cu002F", "/")
+        for symbol in self.symbols:
+            url = self.history_url.format(symbol)
+            params = {
+                "period1": datefrom,
+                "period2": dateto,
+                "interval": f"1{frequency}",
+                "events": "history",
+            }
+            param_string = urlencode(params).replace("%5Cu002F", "/")
 
-        res = self._get(url, params=param_string)
-        res.raise_for_status()
+            res = self._get(url, params=param_string)
+            res.raise_for_status()
 
-        return pd.read_csv(StringIO(res.text), parse_dates=["Date"])
+            df = pd.read_csv(StringIO(res.text), parse_dates=["Date"])
+            df.insert(0, "Ticker", symbol)
+            dataframes.append(df)
+
+        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
+
+        return df
 
     @property
     def price(self):
         self._update_quote()
-        data = {
-            "ticker": self.yf_ticker,
-            "currency": self.yf_currency,
-            "price": self.yf_price,
-            "change": self.yf_change,
-            "changep": self.yf_changep,
-            "last_trade": self.yf_last_trade,
-            "exchange": self.yf_exchange,
-        }
-
-        return pd.DataFrame(data, index=[0])
+        return pd.DataFrame(self._quote)

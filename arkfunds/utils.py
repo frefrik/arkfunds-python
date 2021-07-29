@@ -16,4 +16,4 @@ def _convert_to_list(symbols, comma_split=False):
             return [x.strip() for x in symbols.upper().split(",")]
         else:
             return re.findall(r"[\w\-.=^&]+", symbols.upper())
-    return symbols
+    return [symbol.upper() for symbol in symbols]

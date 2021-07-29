@@ -14,22 +14,23 @@ pip install arkfunds
 from arkfunds import ETF, Stock
 
 # ARK ETFs
-arkk = ETF('ARKK')
+etf = ETF("ARKK")
 
-arkk.profile()
-arkk.holdings()
-arkk.trades()
-arkk.news()
+etf.profile()
+etf.holdings()
+etf.trades()
+etf.news()
 
 # Stocks
-tsla = Stock("TSLA")
+symbols = ["tsla", "coin", "tdoc"]
+stock = Stock(symbols)
 
-tsla.profile()
-tsla.fund_ownership()
-tsla.trades()
+stock.profile()
+stock.fund_ownership()
+stock.trades()
 
-tsla.price()
-tsla.price_history()
+stock.price()
+stock.price_history()
 ```
 
 ## Usage: ARK ETFs
@@ -42,7 +43,8 @@ arkk = ETF('<ark fund symbols>')
 ```python
 import json
 from arkfunds import ETF
-etfs = ETF("ARKF, ARKK, ARKX")
+symbols = ["ARKF", "ARKK", "ARKX"]
+etfs = ETF(symbols)
 
 df = etfs.profile()
 print(df)
@@ -63,12 +65,12 @@ df = arkk.holdings()
 print(df.head(5))
 
 # Output:
-#           date  fund                       company ticker      cusip     shares  market_value  weight  weight_rank
-# 0   2021-07-23  ARKK                     TESLA INC   TSLA  88160R101    3598676  2.336476e+09   10.08            1
-# 1   2021-07-23  ARKK                      ROKU INC   ROKU  77543R102    3243131  1.364223e+09    5.88            2
-# 2   2021-07-23  ARKK            TELADOC HEALTH INC   TDOC  87918A105    8587318  1.312743e+09    5.66            3
-# 3   2021-07-23  ARKK                SQUARE INC - A     SQ  852234103    4626083  1.205511e+09    5.20            4
-# 4   2021-07-23  ARKK         SHOPIFY INC - CLASS A   SHOP  82509L107     717382  1.143571e+09    4.93            5
+#    fund        date                company ticker      cusip   shares  market_value  weight  weight_rank
+# 0  ARKK  2021-07-29              TESLA INC   TSLA  88160R101  3551176  2.297540e+09   10.14            1
+# 1  ARKK  2021-07-29               ROKU INC   ROKU  77543R102  3094614  1.449362e+09    6.39            2
+# 2  ARKK  2021-07-29     TELADOC HEALTH INC   TDOC  87918A105  8785584  1.333740e+09    5.88            3
+# 3  ARKK  2021-07-29         SQUARE INC - A     SQ  852234103  4565037  1.180564e+09    5.21            4
+# 4  ARKK  2021-07-29  SHOPIFY INC - CLASS A   SHOP  82509L107   707932  1.088799e+09    4.80            5
 ```
 
 ### ETF Trades
@@ -80,20 +82,18 @@ df = arkk.trades()
 print(df)
 
 # Output:
-#           date  fund direction ticker                                company      cusip   shares  etf_percent
-# 0   2021-07-23  ARKK       Buy      U                     UNITY SOFTWARE INC  91332U101    23749       0.0106
-# 1   2021-07-23  ARKK       Buy   FATE                  FATE THERAPEUTICS INC  31189P102    74121       0.0270
-# 2   2021-07-23  ARKK       Buy   TWTR                            TWITTER INC  90184L102   982205       0.2983
-# 3   2021-07-23  ARKK       Buy   PACB  PACIFIC BIOSCIENCES OF CALIFORNIA INC  69404D108   265173       0.0345
-# 4   2021-07-23  ARKK       Buy   PATH                             UIPATH INC  90364P105    80566       0.0217
-# 5   2021-07-23  ARKK      Sell    TXG                       10X GENOMICS INC  88025U109    19665       0.0155
-# 6   2021-07-23  ARKK      Sell   TWST                  TWIST BIOSCIENCE CORP  90184D100     5672       0.0029
-# 7   2021-07-23  ARKK      Sell  TCEHY                   TENCENT HOLDINGS LTD  88032Q109      134       0.0000
-# 8   2021-07-23  ARKK      Sell   ROKU                               ROKU INC  77543R102    59042       0.1180
-# 9   2021-07-23  ARKK      Sell   PSTG                       PURE STORAGE INC  74624M102      350       0.0000
-# 10  2021-07-23  ARKK      Sell    NVS                            NOVARTIS AG  66987V109      216       0.0001
-# 11  2021-07-23  ARKK      Sell   DOCU                           DOCUSIGN INC  256163106    39242       0.0519
-# 12  2021-07-23  ARKK      Sell   BEKE                        KE HOLDINGS INC  482497104  2033197       0.2549
+#     fund        date direction ticker                      company      cusip  shares  etf_percent
+# 0   ARKK  2021-07-28       Buy   TDOC           TELADOC HEALTH INC  87918A105  311612       0.2043
+# 1   ARKK  2021-07-28       Buy   SPOT        SPOTIFY TECHNOLOGY SA  L8681T102  201549       0.1966
+# 2   ARKK  2021-07-28      Sell   BEKE              KE HOLDINGS INC  482497104   41500       0.0052
+# 3   ARKK  2021-07-28      Sell   TWST        TWIST BIOSCIENCE CORP  90184D100   89660       0.0464
+# 4   ARKK  2021-07-28      Sell   SKLZ                   SKILLZ INC  83067L109  921897       0.0592
+# 5   ARKK  2021-07-28      Sell   ROKU                     ROKU INC  77543R102   47200       0.0987
+# 6   ARKK  2021-07-28      Sell   PSTG             PURE STORAGE INC  74624M102      85       0.0000
+# 7   ARKK  2021-07-28      Sell  NTDOY              NINTENDO CO LTD  654445303   25100       0.0076
+# 8   ARKK  2021-07-28      Sell   IOVA  IOVANCE BIOTHERAPEUTICS INC  462260100  413807       0.0427
+# 9   ARKK  2021-07-28      Sell   DOCU                 DOCUSIGN INC  256163106   65768       0.0893
+# 10  ARKK  2021-07-28      Sell    TXG             10X GENOMICS INC  88025U109   89643       0.0752
 ```
 
 ### ETF News
@@ -118,7 +118,7 @@ print(df.head(5))
 ## Usage: Stocks
 ```python
 from arkfunds import Stock
-stock = Stock('<symbol>')
+stock = Stock('<symbols>')
 ```
 
 ### Stock Profile
@@ -149,10 +149,10 @@ df = tsla.fund_ownership()
 print(df)
 
 # Output:
-#          date ticker  fund  weight  weight_rank   shares  market_value
-# 0  2021-07-23   TSLA  ARKK   10.08            1  3598676  2.336476e+09
-# 1  2021-07-23   TSLA  ARKQ   11.02            1   482989  3.135854e+08
-# 2  2021-07-23   TSLA  ARKW   10.10            1   913753  5.932633e+08
+#   ticker        date  fund  weight  weight_rank   shares  market_value
+# 0   TSLA  2021-07-29  ARKK   10.14            1  3551176  2.297540e+09
+# 1   TSLA  2021-07-29  ARKQ   11.33            1   478166  3.093638e+08
+# 2   TSLA  2021-07-29  ARKW    9.87            1   898972  5.816169e+08
 ```
 
 ### Stock Trades
@@ -183,25 +183,37 @@ print(df)
 ### Stock Prices
 ```python
 from arkfunds import Stock
-tsla = Stock('TSLA')
+symbols = ["tsla", "coin", "tdoc"]
+stock = Stock(symbols)
 
-df = tsla.price()
+df = stock.price()
 print(df)
 # Output:
 #   ticker currency   price    change   changep          last_trade exchange
 # 0   TSLA      USD  646.98  2.199951  0.341194 2021-07-28 20:00:03      NMS
+# 1   COIN      USD  241.75  6.669998  2.837331 2021-07-28 20:00:02      NMS
+# 2   TDOC      USD  151.81  0.800003  0.529768 2021-07-28 20:00:02      NYQ
 
-df = tsla.price_history(days_back=7, frequency="d")
+df = stock.price_history(days_back=7, frequency="d")
 print(df)
 
 # Output: 
-#         Date        Open        High         Low       Close   Adj Close    Volume
-# 0 2021-07-21  659.609985  664.859985  650.289978  655.289978  655.289978  13910800
-# 1 2021-07-22  656.440002  662.169983  644.599976  649.260010  649.260010  15105700
-# 2 2021-07-23  646.359985  648.799988  637.299988  643.380005  643.380005  14581300
-# 3 2021-07-26  650.969971  668.200012  647.109985  657.619995  657.619995  25044100
-# 4 2021-07-27  663.400024  666.500000  627.239990  644.780029  644.780029  32756900
-# 5 2021-07-28  646.994995  654.969910  639.400085  646.979980  646.979980  15790823
+#    Ticker       Date        Open        High         Low       Close   Adj Close    Volume
+# 0    TSLA 2021-07-22  656.440002  662.169983  644.599976  649.260010  649.260010  15105700
+# 1    TSLA 2021-07-23  646.359985  648.799988  637.299988  643.380005  643.380005  14581300
+# 2    TSLA 2021-07-26  650.969971  668.200012  647.109985  657.619995  657.619995  25044100
+# 3    TSLA 2021-07-27  663.400024  666.500000  627.239990  644.780029  644.780029  32756900
+# 4    TSLA 2021-07-28  647.000000  654.969971  639.400024  646.979980  646.979980  15970200
+# 5    COIN 2021-07-22  232.000000  232.320007  224.500000  226.080002  226.080002   2551700
+# 6    COIN 2021-07-23  226.220001  227.350006  222.729996  224.919998  224.919998   1565900
+# 7    COIN 2021-07-26  240.080002  249.800003  237.880005  245.449997  245.449997   7592500
+# 8    COIN 2021-07-27  243.000000  243.210007  229.119995  235.080002  235.080002   5615000
+# 9    COIN 2021-07-28  240.300003  242.869995  238.029999  241.750000  241.750000   2057800
+# 10   TDOC 2021-07-22  154.449997  155.369995  151.600006  152.869995  152.869995   1302300
+# 11   TDOC 2021-07-23  151.949997  152.602997  147.860001  151.589996  151.589996   1629800
+# 12   TDOC 2021-07-26  150.910004  150.919998  148.570007  149.750000  149.750000   2136300
+# 13   TDOC 2021-07-27  149.929993  152.169998  145.619995  151.009995  151.009995   2714300
+# 14   TDOC 2021-07-28  134.779999  152.289993  133.250000  151.809998  151.809998  11577300
 ```
 
 ## License

@@ -7,17 +7,17 @@ from .utils import _convert_to_list
 class Stock(ArkFunds):
     """Class for accessing Stock data"""
 
-    def __init__(self, symbol: str):
+    def __init__(self, symbols: str):
         """Initialize
 
         Args:
             symbol (str): Stock ticker
         """
-        super().__init__()
-        self.symbol = _convert_to_list(symbol)
+        super(Stock, self).__init__(symbols)
+        self.symbols = _convert_to_list(symbols)
 
         try:
-            self.yf = YahooFinance(self.symbol)
+            self.yf = YahooFinance(self.symbols)
         except Exception:
             self.yf = None
 
@@ -33,7 +33,7 @@ class Stock(ArkFunds):
             "query": {},
         }
 
-        return self._dataframe(self.symbol, params)
+        return self._dataframe(self.symbols, params)
 
     def fund_ownership(self):
         """Get Stock Fund Ownership
@@ -47,7 +47,7 @@ class Stock(ArkFunds):
             "query": {},
         }
 
-        return self._dataframe(self.symbol, params)
+        return self._dataframe(self.symbols, params)
 
     def trades(
         self, direction: str = None, date_from: date = None, date_to: date = None
@@ -72,7 +72,7 @@ class Stock(ArkFunds):
             },
         }
 
-        return self._dataframe(self.symbol, params)
+        return self._dataframe(self.symbols, params)
 
     def price(self):
         """Get current stock price info

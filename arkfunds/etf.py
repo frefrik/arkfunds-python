@@ -12,7 +12,7 @@ class ETF(ArkFunds):
         Args:
             symbols (str or list): ARK ETF symbol or list collection of symbols
         """
-        super().__init__()
+        super(ETF, self).__init__(symbols)
         self.symbols = _convert_to_list(symbols)
         self._validate_symbols()
 
