@@ -1,4 +1,5 @@
 import pytest
+
 from arkfunds import ETF
 
 ETFS = [

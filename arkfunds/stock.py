@@ -1,7 +1,8 @@
 from datetime import date
+
 from .arkfunds import ArkFunds
-from .yahoo import YahooFinance
 from .utils import _convert_to_list
+from .yahoo import YahooFinance
 
 
 class Stock(ArkFunds):

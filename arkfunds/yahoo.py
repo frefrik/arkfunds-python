@@ -1,8 +1,10 @@
-import requests
-import pandas as pd
+from datetime import datetime, timedelta
 from io import StringIO
 from urllib.parse import urlencode
-from datetime import datetime, timedelta
+
+import pandas as pd
+import requests
+
 from .utils import get_useragent
 
 

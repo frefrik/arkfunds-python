@@ -1,5 +1,5 @@
-import re
 import importlib.metadata
+import re
 
 
 def get_useragent(client, agent="Mozilla/5.0"):

@@ -1,6 +1,7 @@
 import pytest
-from arkfunds import Stock
 from requests.exceptions import HTTPError
+
+from arkfunds import Stock
 
 STOCKS = [
     Stock("TSLA"),

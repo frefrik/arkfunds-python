@@ -1,5 +1,6 @@
-import requests
 import pandas as pd
+import requests
+
 from .utils import get_useragent
 
 

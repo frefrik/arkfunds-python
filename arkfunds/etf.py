@@ -1,4 +1,5 @@
 from datetime import date
+
 from .arkfunds import ArkFunds
 from .utils import _convert_to_list
 

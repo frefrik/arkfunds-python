@@ -1,4 +1,5 @@
 import importlib.metadata
+
 from .etf import ETF
 from .stock import Stock
 
