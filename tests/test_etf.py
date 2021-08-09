@@ -32,9 +32,8 @@ def test_etf_news(etf):
     assert not etf.news().empty
 
 
-def test_bad_etf_symbols(symbols="ARKK, ARKF, ARKS"):
-    with pytest.raises(ValueError):
-        assert ETF(symbols)
+def test_etf_symbols_validation(symbols="ARKK, ARKF, ARKS"):
+    assert ETF(symbols).symbols == ["ARKK", "ARKF"]
 
 
 def test_etf_symbols_list():

@@ -9,6 +9,50 @@ from .utils import _convert_to_list
 class ETF(ArkFunds):
     """Class for accessing ARK ETF data"""
 
+    _COLUMNS = {
+        "profile": [
+            "symbol",
+            "name",
+            "description",
+            "fund_type",
+            "inception_date",
+            "cusip",
+            "isin",
+            "website",
+        ],
+        "holdings": [
+            "fund",
+            "date",
+            "company",
+            "ticker",
+            "cusip",
+            "shares",
+            "market_value",
+            "weight",
+            "weight_rank",
+        ],
+        "trades": [
+            "fund",
+            "date",
+            "direction",
+            "ticker",
+            "company",
+            "cusip",
+            "shares",
+            "etf_percent",
+        ],
+        "news": [
+            "id",
+            "datetime",
+            "related",
+            "source",
+            "headline",
+            "summary",
+            "url",
+            "image",
+        ],
+    }
+
     def __init__(self, symbols: str):
         """Initialize
 
@@ -32,34 +76,30 @@ class ETF(ArkFunds):
         self.symbols = valid_symbols
         self.invalid_symbols = invalid_symbols or None
 
-        if self.invalid_symbols:
-            raise ValueError(
-                f"Invalid symbols: {self.invalid_symbols}. Only ARK ETF symbols accepted: {', '.join(self.ARK_FUNDS)}"
-            )
-
     def _dataframe(self, symbols, params):
         endpoint = params["endpoint"]
+        columns = self._COLUMNS[endpoint]
         dataframes = []
 
-        for symbol in symbols:
-            params["query"]["symbol"] = symbol
-            data = self._get(params)
+        if not self.symbols:
+            return f"ETF.{endpoint}: Invalid symbols {self.invalid_symbols}. Symbols accepted: {', '.join(self.ARK_FUNDS)}"
+        else:
+            for symbol in symbols:
+                params["query"]["symbol"] = symbol
+                data = self._get(params)
 
-            df = pd.DataFrame(data[endpoint])
+                df = pd.DataFrame(data[endpoint], columns=columns)
 
-            if endpoint == "holdings":
-                _date = data.get("date")
-                df.insert(0, "fund", symbol)
-                df.insert(1, "date", _date)
+                if endpoint == "holdings":
+                    df["fund"] = symbol
+                    df["date"] = data.get("date")
 
-            if endpoint == "trades":
-                df.insert(0, "fund", symbol)
+                if endpoint == "trades":
+                    df["fund"] = symbol
 
-            dataframes.append(df)
+                dataframes.append(df)
 
-        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
-
-        return df
+            return pd.concat(dataframes, axis=0).reset_index(drop=True)
 
     def profile(self):
         """Get ARK ETF profile information

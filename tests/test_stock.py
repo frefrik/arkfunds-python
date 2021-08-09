@@ -1,5 +1,4 @@
 import pytest
-from requests.exceptions import HTTPError
 
 from arkfunds import Stock
 
@@ -7,6 +6,7 @@ STOCKS = [
     Stock("TSLA"),
     Stock("tsla, coin"),
     Stock("tdoc, aapl, tsla"),
+    Stock("tdoc, aapl, loloil"),
     Stock("roku SHOP tsla"),
     Stock(["TSLA", "sq", "TDOC", "spot"]),
 ]
@@ -40,9 +40,8 @@ def test_stock_profile_columns(stock):
     assert stock.profile().columns.to_list() == columns
 
 
-def test_bad_stock_profile(symbol="TSLAS"):
-    with pytest.raises(HTTPError):
-        assert Stock(symbol).profile()
+def test_bad_stock_profile(symbol="LOLOIL"):
+    assert Stock(symbol).profile() == f"Stock.profile: No data found for ['{symbol}']"
 
 
 def test_stock_fund_ownership(stock):

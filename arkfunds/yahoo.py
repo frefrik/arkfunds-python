@@ -12,14 +12,40 @@ class YahooFinance:
     quote_url = "https://query2.finance.yahoo.com/v7/finance/options/{0}"
     history_url = "https://query1.finance.yahoo.com/v7/finance/download/{0}"
 
+    _COLUMNS = {
+        "price": [
+            "ticker",
+            "currency",
+            "price",
+            "change",
+            "changep",
+            "last_trade",
+            "exchange",
+        ],
+        "price_history": [
+            "ticker",
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "adj_close",
+            "volume",
+        ],
+    }
+
     def __init__(self, symbols):
         self.symbols = symbols
         self.timeout = 2
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": get_useragent(__class__.__name__)})
 
-    def _get(self, url, params=None):
+    def _get_data(self, url, params=None):
         res = self.session.get(url, params=params, timeout=self.timeout)
+
+        if res.status_code == 404:
+            return None
+
         res.raise_for_status()
 
         return res
@@ -27,30 +53,29 @@ class YahooFinance:
     def _update_quote(self):
         self._quote = []
         for symbol in self.symbols:
-            res = self._get(self.quote_url.format(symbol))
+            res = self._get_data(self.quote_url.format(symbol))
 
-            if res.status_code == 404:
-                raise LookupError("Symbol not found.")
-            else:
-                res.raise_for_status()
+            _json = res.json()["optionChain"]["result"]
 
-            _json = res.json()["optionChain"]["result"][0]["quote"]
+            if len(_json) > 0:
+                _data = _json[0]["quote"]
 
-            self._quote.append(
-                {
-                    "ticker": _json.get("symbol"),
-                    "currency": _json.get("currency"),
-                    "price": _json.get("regularMarketPrice"),
-                    "change": _json.get("regularMarketChange"),
-                    "changep": _json.get("regularMarketChangePercent"),
-                    "last_trade": datetime.utcfromtimestamp(
-                        _json.get("regularMarketTime")
-                    ),
-                    "exchange": _json.get("exchange"),
-                }
-            )
+                self._quote.append(
+                    {
+                        "ticker": _data.get("symbol"),
+                        "currency": _data.get("currency"),
+                        "price": _data.get("regularMarketPrice"),
+                        "change": _data.get("regularMarketChange"),
+                        "changep": _data.get("regularMarketChangePercent"),
+                        "last_trade": datetime.utcfromtimestamp(
+                            _data.get("regularMarketTime")
+                        ),
+                        "exchange": _data.get("exchange"),
+                    }
+                )
 
     def price_history(self, days_back, frequency):
+        df = pd.DataFrame(columns=self._COLUMNS["price_history"])
         dataframes = []
         dt = timedelta(days=days_back)
         frequency = {"m": "mo", "w": "wk", "d": "d"}[frequency]
@@ -68,19 +93,25 @@ class YahooFinance:
                 "events": "history",
             }
             param_string = urlencode(params).replace("%5Cu002F", "/")
+            res = self._get_data(url, params=param_string)
 
-            res = self._get(url, params=param_string)
-            res.raise_for_status()
+            if res:
+                df = pd.read_csv(StringIO(res.text), parse_dates=["Date"])
+                df.insert(0, "ticker", symbol)
+                df.columns = self._COLUMNS["price_history"]
+                dataframes.append(df)
 
-            df = pd.read_csv(StringIO(res.text), parse_dates=["Date"])
-            df.insert(0, "Ticker", symbol)
-            dataframes.append(df)
-
-        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
-
-        return df
+        if df.empty:
+            return f"Stock.price_history: No data found for {self.symbols}"
+        else:
+            return pd.concat(dataframes, axis=0).reset_index(drop=True)
 
     @property
     def price(self):
         self._update_quote()
-        return pd.DataFrame(self._quote)
+        df = pd.DataFrame(self._quote, columns=self._COLUMNS["price"])
+
+        if df.empty:
+            return f"Stock.price: No data found for {self.symbols}"
+        else:
+            return df

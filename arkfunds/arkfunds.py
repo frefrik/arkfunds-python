@@ -33,6 +33,9 @@ class ArkFunds:
             timeout=self.timeout,
         )
 
+        if res.status_code == 404:
+            return None
+
         res.raise_for_status()
 
         return res.json()

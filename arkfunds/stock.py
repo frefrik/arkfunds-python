@@ -10,6 +10,43 @@ from .yahoo import YahooFinance
 class Stock(ArkFunds):
     """Class for accessing Stock data"""
 
+    _COLUMNS = {
+        "profile": [
+            "ticker",
+            "name",
+            "country",
+            "industry",
+            "sector",
+            "fullTimeEmployees",
+            "summary",
+            "website",
+            "market",
+            "exchange",
+            "currency",
+            "marketCap",
+            "sharesOutstanding",
+        ],
+        "ownership": [
+            "ticker",
+            "date",
+            "fund",
+            "weight",
+            "weight_rank",
+            "shares",
+            "market_value",
+        ],
+        "trades": [
+            "date",
+            "fund",
+            "direction",
+            "ticker",
+            "company",
+            "cusip",
+            "shares",
+            "etf_percent",
+        ],
+    }
+
     def __init__(self, symbols: str):
         """Initialize
 
@@ -26,28 +63,29 @@ class Stock(ArkFunds):
 
     def _dataframe(self, symbols, params):
         endpoint = params["endpoint"]
+        columns = self._COLUMNS[endpoint]
         dataframes = []
 
         for symbol in symbols:
             params["query"]["symbol"] = symbol
             data = self._get(params)
 
-            if endpoint == "profile":
-                df = pd.DataFrame(data, index=[0])
-            else:
-                df = pd.DataFrame(data[endpoint])
+            if data:
+                if endpoint == "profile":
+                    df = pd.DataFrame(data, columns=columns, index=[0])
+                else:
+                    df = pd.DataFrame(data[endpoint], columns=columns)
 
-            if endpoint == "ownership":
-                ticker = data.get("symbol")
-                _date = data.get("date")
-                df.insert(0, "ticker", ticker)
-                df.insert(1, "date", _date)
+                if endpoint == "ownership":
+                    df["ticker"] = data.get("symbol")
+                    df["date"] = data.get("date")
 
-            dataframes.append(df)
+                dataframes.append(df)
 
-        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
-
-        return df
+        if not dataframes:
+            return f"Stock.{endpoint}: No data found for {symbols}"
+        else:
+            return pd.concat(dataframes, axis=0).reset_index(drop=True)
 
     def profile(self):
         """Get Stock profile information
