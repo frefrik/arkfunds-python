@@ -1,5 +1,7 @@
 from datetime import date
 
+import pandas as pd
+
 from .arkfunds import ArkFunds
 from .utils import _convert_to_list
 
@@ -34,6 +36,30 @@ class ETF(ArkFunds):
             raise ValueError(
                 f"Invalid symbols: {self.invalid_symbols}. Only ARK ETF symbols accepted: {', '.join(self.ARK_FUNDS)}"
             )
+
+    def _dataframe(self, symbols, params):
+        endpoint = params["endpoint"]
+        dataframes = []
+
+        for symbol in symbols:
+            params["query"]["symbol"] = symbol
+            data = self._get(params)
+
+            df = pd.DataFrame(data[endpoint])
+
+            if endpoint == "holdings":
+                _date = data.get("date")
+                df.insert(0, "fund", symbol)
+                df.insert(1, "date", _date)
+
+            if endpoint == "trades":
+                df.insert(0, "fund", symbol)
+
+            dataframes.append(df)
+
+        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
+
+        return df
 
     def profile(self):
         """Get ARK ETF profile information

@@ -1,4 +1,3 @@
-import pandas as pd
 import requests
 
 from .utils import get_useragent
@@ -33,41 +32,7 @@ class ArkFunds:
             params=params["query"],
             timeout=self.timeout,
         )
+
         res.raise_for_status()
 
-        return res
-
-    def _dataframe(self, symbols, params):
-        key = params["key"]
-        endpoint = params["endpoint"]
-        dataframes = []
-
-        for symbol in symbols:
-            params["query"]["symbol"] = symbol
-            data = self._get(params).json()
-
-            if key == "stock" and endpoint == "profile":
-                df = pd.DataFrame(data, index=[0])
-            else:
-                df = pd.DataFrame(data[endpoint])
-
-            if key == "etf":
-                if endpoint == "holdings":
-                    _date = data.get("date")
-                    df.insert(0, "fund", symbol)
-                    df.insert(1, "date", _date)
-
-                if endpoint == "trades":
-                    df.insert(0, "fund", symbol)
-
-            if key == "stock" and endpoint == "ownership":
-                ticker = data.get("symbol")
-                _date = data.get("date")
-                df.insert(0, "ticker", ticker)
-                df.insert(1, "date", _date)
-
-            dataframes.append(df)
-
-        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
-
-        return df
+        return res.json()

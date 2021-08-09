@@ -1,5 +1,7 @@
 from datetime import date
 
+import pandas as pd
+
 from .arkfunds import ArkFunds
 from .utils import _convert_to_list
 from .yahoo import YahooFinance
@@ -21,6 +23,31 @@ class Stock(ArkFunds):
             self.yf = YahooFinance(self.symbols)
         except Exception:
             self.yf = None
+
+    def _dataframe(self, symbols, params):
+        endpoint = params["endpoint"]
+        dataframes = []
+
+        for symbol in symbols:
+            params["query"]["symbol"] = symbol
+            data = self._get(params)
+
+            if endpoint == "profile":
+                df = pd.DataFrame(data, index=[0])
+            else:
+                df = pd.DataFrame(data[endpoint])
+
+            if endpoint == "ownership":
+                ticker = data.get("symbol")
+                _date = data.get("date")
+                df.insert(0, "ticker", ticker)
+                df.insert(1, "date", _date)
+
+            dataframes.append(df)
+
+        df = pd.concat(dataframes, axis=0).reset_index(drop=True)
+
+        return df
 
     def profile(self):
         """Get Stock profile information
