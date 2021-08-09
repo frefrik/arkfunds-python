@@ -1,5 +1,8 @@
 # arkfunds-python
 
+[![PyPI version](https://badge.fury.io/py/arkfunds.svg)](https://badge.fury.io/py/arkfunds)
+![Licence](https://img.shields.io/github/license/frefrik/arkfunds-python)
+
 A Python library for monitoring [Ark Invest](https://ark-funds.com/) funds data.
 
 ## Installation
