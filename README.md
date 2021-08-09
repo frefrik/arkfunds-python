@@ -1,6 +1,6 @@
 # arkfunds-python
 
-A Python library for monitoring [Ark Invest funds](https://ark-funds.com/) data.
+A Python library for monitoring [Ark Invest](https://ark-funds.com/) funds data.
 
 ## Installation
 Install the latest release from [PyPI](https://pypi.org/project/arkfunds/):
@@ -49,7 +49,6 @@ etfs = ETF(symbols)
 df = etfs.profile()
 print(df)
 
-# Output:
 #   symbol                                name                                        description          fund_type inception_date      cusip          isin                            website
 # 0   ARKF              Fintech Innovation ETF  ARKF is an actively managed Exchange Traded Fu...  Active Equity ETF     2019-02-04  00214Q708  US00214Q7088  https://ark-funds.com/fintech-etf
 # 1   ARKK                  ARK Innovation ETF  ARKK is an actively managed ETF that seeks lon...  Active Equity ETF     2014-10-31  00214Q104  US00214Q1040         https://ark-funds.com/arkk
@@ -64,7 +63,6 @@ arkk = ETF('ARKK')
 df = arkk.holdings()
 print(df.head(5))
 
-# Output:
 #    fund        date                company ticker      cusip   shares  market_value  weight  weight_rank
 # 0  ARKK  2021-07-29              TESLA INC   TSLA  88160R101  3551176  2.297540e+09   10.14            1
 # 1  ARKK  2021-07-29               ROKU INC   ROKU  77543R102  3094614  1.449362e+09    6.39            2
@@ -81,7 +79,6 @@ arkk = ETF('ARKK')
 df = arkk.trades()
 print(df)
 
-# Output:
 #     fund        date direction ticker                      company      cusip  shares  etf_percent
 # 0   ARKK  2021-07-28       Buy   TDOC           TELADOC HEALTH INC  87918A105  311612       0.2043
 # 1   ARKK  2021-07-28       Buy   SPOT        SPOTIFY TECHNOLOGY SA  L8681T102  201549       0.1966
@@ -103,8 +100,7 @@ arkk = ETF('ARKK')
 
 df = arkk.news()
 print(df.head(5))
-
-# Output: 
+ 
 #      id                   datetime related  ...                                            summary                                                url                                              image
 # 0  2101  2021-07-23T08:42:00+00:00    ARKK  ...  One of Cathie Wood's ARK Invest funds bought o...  https://247wallst.com/investing/2021/07/23/cat...  https://247wallst.com/wp-content/uploads/2020/...
 # 1  2102  2021-07-23T06:39:00+00:00    ARKK  ...                                                     https://www.gurufocus.com/news/1483143/cra-fin...                                                   
@@ -131,7 +127,6 @@ df = tsla.profile()
 print(df)
 print(df.columns.to_list())
 
-# Output:
 #   ticker         name        country            industry             sector  fullTimeEmployees  ...               website     market  exchange currency     marketCap  sharesOutstanding
 # 0   TSLA  Tesla, Inc.  United States  Auto Manufacturers  Consumer Cyclical              70757  ...  http://www.tesla.com  us_market  NasdaqGS      USD  6.232552e+11          963329984
 # 
@@ -148,7 +143,6 @@ tsla = Stock('TSLA')
 df = tsla.fund_ownership()
 print(df)
 
-# Output:
 #   ticker        date  fund  weight  weight_rank   shares  market_value
 # 0   TSLA  2021-07-29  ARKK   10.14            1  3551176  2.297540e+09
 # 1   TSLA  2021-07-29  ARKQ   11.33            1   478166  3.093638e+08
@@ -163,7 +157,6 @@ tsla = Stock('TSLA')
 df = tsla.trades()
 print(df)
 
-# Output:
 #           date  fund direction ticker    company      cusip  shares  etf_percent
 # 0   2021-07-07  ARKK       Buy   TSLA  TESLA INC  88160R101  110731       0.2941
 # 1   2021-06-04  ARKK       Buy   TSLA  TESLA INC  88160R101    4977       0.0144
@@ -188,7 +181,7 @@ stock = Stock(symbols)
 
 df = stock.price()
 print(df)
-# Output:
+
 #   ticker currency   price    change   changep          last_trade exchange
 # 0   TSLA      USD  646.98  2.199951  0.341194 2021-07-28 20:00:03      NMS
 # 1   COIN      USD  241.75  6.669998  2.837331 2021-07-28 20:00:02      NMS
@@ -196,8 +189,7 @@ print(df)
 
 df = stock.price_history(days_back=7, frequency="d")
 print(df)
-
-# Output: 
+ 
 #    Ticker       Date        Open        High         Low       Close   Adj Close    Volume
 # 0    TSLA 2021-07-22  656.440002  662.169983  644.599976  649.260010  649.260010  15105700
 # 1    TSLA 2021-07-23  646.359985  648.799988  637.299988  643.380005  643.380005  14581300
