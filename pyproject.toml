@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "arkfunds"
-version = "0.3.1"
+version = "0.3.2"
 description = "Python library for monitoring Ark Invest funds data."
 repository = "https://github.com/frefrik/arkfunds-python"
 readme = "README.rst"
