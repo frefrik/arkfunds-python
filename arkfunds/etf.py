@@ -119,7 +119,7 @@ class ETF(ArkFunds):
         """Get ARK ETF holdings
 
         Args:
-            date (date, optional): Fund holding date in ISO 8601 format. Defaults to None.
+            _date (date, optional): Fund holding date in ISO 8601 format. Defaults to None.
 
         Returns:
             pandas.DataFrame
